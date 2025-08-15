@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+---
+
+<header>
+  <div class="header-container">
+    <div class="logo-container">
+      <Image src={logo} alt="Logo de Prestamos personales" width={50} height={50} />
+      <h1>Prestamos personales</h1>
+    </div>
+    <nav>
+      <a href="#simulador">Simulador</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#requisitos">Requisitos</a>
+      <a href="#quienes-somos">Quienes somos</a>
+    </nav>
+  </div>
+</header>
+<style>
+    /* 3. Estilos de Header y Footer */
+
+header {
+    border-bottom: none;
+}
+
+.header-container, .footer-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  height: 40px;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  color: var(--header-text-color);
+}
+    nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+nav a {
+  color: var(--header-text-color);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  .header-container {
+    flex-direction: row;
+  }
+  nav {
+    margin-top: 0;
+  }
+}
+</style>

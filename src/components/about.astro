@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+---
+<section class="about-us-section" id="quienes-somos">
+  <div class="container about-us-container">
+    <div class="about-us-text-content">
+      <h2 class="section-title">Quiénes Somos</h2>
+      <p>
+        En <strong>Préstamos Personales</strong>, creemos en un acceso fácil y transparente a soluciones financieras. Nuestra misión es ayudarte a alcanzar tus metas personales y profesionales a través de un servicio rápido, seguro y sin complicaciones. Estamos comprometidos con la confianza y la claridad en cada paso del proceso, para que tengas el control total de tus finanzas.
+      </p>
+    </div>
+    <div class="about-us-logo-container">
+      <Image src={logo} alt="Logo de Prestamos personales" width={150} height={150} />
+    </div>
+  </div>
+</section>
+<style>
+    /* 9. Estilos de la Sección "Quiénes Somos" */
+.about-us-section {
+  padding: 4rem 1rem;
+  background-color: var(--secondary-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.about-us-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  gap: 2rem;
+}
+
+.about-us-text-content {
+  text-align: center;
+}
+
+.about-us-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-us-logo {
+  max-width: 150px;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+}
+
+.about-us-text-content .section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  display: inline-block;
+  color: var(--primary-color);
+}
+
+.about-us-text-content .section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%; 
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-color);
+}
+
+/* Diseño de dos columnas para pantallas de escritorio */
+@media (min-width: 768px) {
+  .about-us-container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4rem;
+  }
+  
+  .about-us-text-content {
+    flex: 2;
+    }
+
+    .about-us-text-content .section-title {
+        text-align: left;
+    }
+}
+
+</style>

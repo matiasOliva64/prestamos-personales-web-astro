@@ -1,0 +1,113 @@
+---
+---
+<section class="requirements-section" id="requisitos">
+  <div class="container">
+    <h2 class="section-title">Requisitos</h2>
+    <div class="requirements-container">
+
+      <div class="requirement">
+        <div class="icon-wrapper">
+            <p class="age-text">18+</p>
+        </div>
+        <p>Ser mayor de edad</p>
+      </div>
+
+      <div class="requirement">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-id-card"></i>
+        </div>
+        <p>Ser argentino o Residente</p>
+      </div>
+
+      <div class="requirement">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <p>Ser empleado en relación de dependencia</p>
+      </div>
+
+      <div class="requirement">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <p>Tener caja de ahorro</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+<style>
+    /* 8. Estilos de la Sección "Requisitos" */
+:root {
+    --requirements-bg: #0087b3;
+    --requirements-accent: #ffeb50;
+}
+
+.requirements-section {
+    background-color: var(--requirements-bg);
+    color: var(--requirements-accent);
+    padding: 4rem 1rem;
+    text-align: center;
+}
+
+.requirements-section .section-title {
+    color: var(--requirements-accent);
+}
+
+.requirements-section .section-title::after {
+    background-color: var(--requirements-accent);
+}
+
+.requirements-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.requirement {
+    flex: 1;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.requirement .icon-wrapper {
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--requirements-accent);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.requirement .icon-wrapper .age-text {
+    font-size: 60px; 
+    font-weight: 700;
+    color: var(--requirements-accent);
+}
+
+.requirement .icon-wrapper i {
+  font-size: 60px;
+  color: var(--requirements-accent);
+}
+
+.requirement p {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+/* Responsive para la sección de requisitos */
+@media (max-width: 820px) {
+  .requirements-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+</style>
