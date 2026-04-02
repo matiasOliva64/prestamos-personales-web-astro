@@ -9,6 +9,7 @@
 
     <form id="loan-form">
       <label for="amount">Monto:</label>
+      <div class="amount-tags"></div>
       <input type="number" id="amount" placeholder="Ej: 10000" required />
 
       <label for="currency">Moneda:</label>
@@ -23,6 +24,7 @@
         <option value="2">2 cuotas</option>
         <option value="3">3 cuotas</option>
         <option value="4">4 cuotas</option>
+        <option value="5">5 cuotas</option>
       </select>
 
       <label for="payment-value">Valor a pagar por cuota:</label>
@@ -42,6 +44,27 @@
 </section>
 <style>
     /* 4. Estilos del Formulario */
+:global(.amount-tag) {
+  background: #f1f3f5;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+:global(.amount-tag:hover) {
+  background: var(--accent-color);
+  color: white;
+}
+
+:global(.amount-tag.active) {
+  background: var(--accent-color);
+  color: white;
+}
 .hero-section {
     background-color: var(--secondary-color);
     padding: 4rem 1rem;
@@ -141,70 +164,98 @@ button:hover {
 }
 </style>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    // Especificamos los tipos de elementos para evitar los avisos
-    const form = document.getElementById('loan-form') as HTMLFormElement;
-    const amountInput = document.getElementById('amount') as HTMLInputElement;
-    const installmentsInput = document.getElementById('installments') as HTMLSelectElement;
-    const paymentValueParagraph = document.getElementById('payment-value') as HTMLParagraphElement;
-    const resultDiv = document.getElementById('result') as HTMLDivElement;
-    const whatsappButton = document.getElementById('whatsapp-button') as HTMLAnchorElement;
+document.addEventListener('DOMContentLoaded', () => {
 
-    // Verificamos que los elementos existan. Esto es una buena práctica.
-    if (!form || !amountInput || !installmentsInput || !paymentValueParagraph || !whatsappButton) {
-        console.error('No se encontraron todos los elementos del formulario.');
-        return; 
+  const form = document.getElementById('loan-form');
+  const amountInput = document.getElementById('amount');
+  const installmentsInput = document.getElementById('installments');
+  const paymentValueParagraph = document.getElementById('payment-value');
+  const resultDiv = document.getElementById('result');
+  const whatsappButton = document.getElementById('whatsapp-button');
+  const currencySelect = document.getElementById('currency');
+  const tagsContainer = document.querySelector('.amount-tags');
+
+  if (!form || !amountInput || !installmentsInput || !paymentValueParagraph || !whatsappButton || !currencySelect || !tagsContainer) {
+    console.error('Faltan elementos del DOM');
+    return;
+  }
+
+  type Currency = 'ARS' | 'USD';
+
+  const amountsByCurrency: Record<Currency, number[]> = {
+    ARS: [5000, 10000, 20000, 50000, 100000],
+    USD: [10, 20, 50, 100, 200]
+  };
+
+  // 🔥 Tipamos parámetro
+  function renderTags(currency: Currency) {
+    tagsContainer.innerHTML = '';
+
+    amountsByCurrency[currency].forEach((amount: number) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'amount-tag';
+
+      btn.textContent = currency === 'ARS'
+        ? `$${amount.toLocaleString('es-AR')}`
+        : `USD ${amount.toLocaleString('en-US')}`;
+
+      btn.addEventListener('click', () => {
+        amountInput.value = amount.toString();
+
+        document.querySelectorAll('.amount-tag')
+          .forEach(t => t.classList.remove('active'));
+
+        btn.classList.add('active');
+      });
+
+      tagsContainer.appendChild(btn);
+    });
+  }
+
+  // 🔥 Init
+  renderTags(currencySelect.value as Currency);
+
+  currencySelect.addEventListener('change', () => {
+    renderTags(currencySelect.value as Currency);
+    amountInput.value = '';
+  });
+
+  // submit
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const monto = parseFloat(amountInput.value);
+    const moneda = currencySelect.value;
+    const cuotas = parseInt(installmentsInput.value);
+
+    let totalInteres = 0;
+
+    switch (cuotas) {
+      case 1: totalInteres = monto * 0.25; break;
+      case 2: totalInteres = monto * 0.50; break;
+      case 3: totalInteres = monto * 0.75; break;
+      case 4: totalInteres = monto * 1; break;
+      case 5: totalInteres = monto * 1.25; break;
     }
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+    const totalPagar = monto + totalInteres;
+    const pagoMensual = totalPagar / cuotas;
 
-        // El linter ya no se quejará de la propiedad '.value'
-        const monto = parseFloat(amountInput.value);
-        const moneda = (document.getElementById('currency') as HTMLSelectElement).value;
-        const cuotas = parseInt(installmentsInput.value);
-        let totalInteres = 0;
+    paymentValueParagraph.textContent = `${moneda} ${pagoMensual.toFixed(2)}`;
 
-        if (isNaN(monto) || isNaN(cuotas) || monto <= 0 || cuotas <= 0) {
-            alert('Por favor, introduce valores válidos para el monto y las cuotas.');
-            return;
-        }
+    const message = `Hola, me gustaría solicitar un préstamo de ${moneda} ${monto} en ${cuotas} cuotas.`;
+    const whatsappUrl = `https://wa.me/5493517516089?text=${encodeURIComponent(message)}`;
+    whatsappButton.href = whatsappUrl;
 
-        switch (cuotas) {
-            case 1:
-                totalInteres = monto * 0.30;
-                break;
-            case 2:
-                totalInteres = monto * 0.60;
-                break;
-            case 3:
-                totalInteres = monto * 0.90;
-                break;
-            case 4:
-                totalInteres = monto * 1.20;
-                break;
-            default:
-                totalInteres = 0;
-                break;
-        }
+    resultDiv.innerHTML = `
+      <h3>Resumen de tu préstamo:</h3>
+      <p><strong>Monto:</strong> ${moneda} ${monto.toFixed(2)}</p>
+      <p><strong>Pago mensual:</strong> ${moneda} ${pagoMensual.toFixed(2)}</p>
+    `;
 
-        const totalPagar = monto + totalInteres;
-        const pagoMensual = totalPagar / cuotas;
+    resultDiv.classList.add('visible');
+  });
 
-        paymentValueParagraph.textContent = `$${pagoMensual.toFixed(2)}`;
-
-        const message = `Hola, me gustaría solicitar un préstamo de $${monto} ${moneda} en ${cuotas} cuotas.`;
-        const whatsappUrl = `https://wa.me/5493517516089?text=${encodeURIComponent(message)}`;
-        whatsappButton.href = whatsappUrl;
-
-        resultDiv.innerHTML = `
-            <h3>Resumen de tu préstamo:</h3>
-            <p><strong>Monto Solicitado:</strong> $${monto.toFixed(2)}</p>
-            <p><strong>Pago Mensual:</strong> $${pagoMensual.toFixed(2)}</p>
-            <p><strong>Total a Pagar:</strong> $${totalPagar.toFixed(2)}</p>
-            <p><strong>Total de Intereses:</strong> $${totalInteres.toFixed(2)}</p>
-        `;
-        resultDiv.classList.add('visible');
-    });
 });
 </script>
